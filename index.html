@@ -42,7 +42,6 @@
 	//var canvas = document.createElement("canvas");
 	var canvas = document.getElementById("canvas");
 	var context = canvas.getContext("2d");
-	var imageData = context.getImageData(0, 0, width, height);
 
 	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 		navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
@@ -68,7 +67,7 @@
 		context.drawImage(video, 0, 0, width, height);
 
 		var row = height / 2;
-		var data = imageData.data.slice(row * width * 3, (row + 1) * width * 3);
+		var data = context.getImageData(0, 0, width, height).data.slice(row * width * 3, (row + 1) * width * 3);
 		if (first) {
 			console.log(data);
 			first = false;
