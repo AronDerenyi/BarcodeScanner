@@ -40,7 +40,6 @@
 <script>
 	var video = document.getElementById("video");
 	var canvas = document.createElement("canvas");
-	//var canvas = document.getElementById("canvas");
 	var context = canvas.getContext("2d");
 
 	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -56,8 +55,6 @@
 		setInterval(loop, 200);
 	}
 
-	var first = true;
-
 	function parse() {
 		var width = video.videoWidth;
 		var height = video.videoHeight;
@@ -67,10 +64,7 @@
 		context.drawImage(video, 0, 0, width, height);
 
 		var data = context.getImageData(0, height / 2, width, 1);
-		if (first) {
-			console.log(data);
-			first = false;
-		}
+		console.log("next");
 //
 //		for (var i = 0; i < width; i++) {
 //			var r = data[i * 3];
