@@ -38,6 +38,9 @@
 </html>
 
 <script>
+	var timeout = 250;
+	var downscaling = 2;
+
 	var video = document.getElementById("video");
 //	var canvas = document.createElement("canvas");
 	var canvas = document.getElementById("canvas");
@@ -53,12 +56,12 @@
 
 	function loop() {
 		if (video.videoWidth > 0 && video.videoHeight > 0) parse();
-		setTimeout(loop, 200);
+		setTimeout(loop, timeout);
 	}
 
 	function parse() {
-		var width = video.videoWidth;
-		var height = video.videoHeight;
+		var width = video.videoWidth / downscaling;
+		var height = video.videoHeight / downscaling;
 		canvas.width = width;
 		canvas.height = height;
 
