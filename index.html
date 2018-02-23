@@ -41,7 +41,7 @@
 	var video = document.getElementById("video");
 //	var canvas = document.createElement("canvas");
 	var canvas = document.getElementById("canvas");
-	var context = canvas.getContext("2d");
+	var context = canvas.getContext("2d", { willReadFrequently: true });
 	var imageData = null;
 
 	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -64,15 +64,13 @@
 		canvas.height = height;
 
 		context.drawImage(video, 0, 0, width, height);
-
-		if (imageData === null) imageData = context.getImageData(0, height / 2, width, 1);
-		var data = imageData.data;
+		var data = context.getImageData(0, height / 2, width, 1).data;
 
 		for (var i = 0; i < width; i++) {
 			var r = data[i * 4];
 			var g = data[i * 4 + 1];
 			var b = data[i * 4 + 2];
-			var a = data[i * 4 + 2];
+			var a = data[i * 4 + 3];
 
 			g = 0;
 			b = 0;
