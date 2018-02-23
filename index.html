@@ -94,8 +94,10 @@
 			if (difference[i] < 0 && difference[i + 1] > 0) {
 				var left = (start + peak) / 2;
 				var right = (peak + i) / 2;
-				context.fillStyle = "rgb(0, 0, 0)";
-				context.fillRect(left, 0, right - left, 1);
+				if (i - start > 3) {
+					context.fillStyle = "rgb(0, 0, 0)";
+					context.fillRect(left, 0, right - left, 1);
+				}
 				start = i;
 				peak = 0;
 			}
