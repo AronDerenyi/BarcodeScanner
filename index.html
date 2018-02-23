@@ -29,24 +29,37 @@
 			border: 1px solid rgba(255, 0, 0, 1);
 			mix-blend-mode: color"></div>
 
+		<canvas id="canvas" style="
+			position: fixed;
+			top: 0;
+			left: 0;"></canvas>
+
 	</body>
 
 </html>
 
 <script>
 	var video = document.getElementById("video");
-	var canvas = document.createElement("canvas");
+	//var canvas = document.createElement("canvas");
+	var canvas = document.getElementById("canvas");
 
 	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 		navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
 			video.src = window.URL.createObjectURL(stream);
 			video.play();
-			parse();
+			setInterval(parse, 100);
 		});
 	}
 
 	function parse() {
-		alert(video.videoWidth + " x " + video.videoHeight);
+		var width = video.videoWidth;
+		var height = video.videoHeight;
+		canvas.width = width;
+		canvas.height = height;
+
+		var context = canvas.getContext("2d");
+		context.drawImage(video, 0, 0, width, height);
+
 		setInterval(parse, 100);
 	}
 </script>
