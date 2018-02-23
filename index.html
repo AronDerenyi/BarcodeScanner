@@ -41,12 +41,11 @@
 
 <script>
 	var video = document.getElementById("video");
-//	var canvas = document.createElement("canvas");
 	var canvas = document.getElementById("canvas");
 	var context = canvas.getContext("2d");
 
 	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-		navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+		navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } } }).then(function(stream) {
 			video.src = window.URL.createObjectURL(stream);
 			video.play();
 			loop();
@@ -55,7 +54,7 @@
 
 	function loop() {
 		if (video.videoWidth > 0 && video.videoHeight > 0) parse();
-		setTimeout(loop, 200);
+		setTimeout(loop, 100);
 	}
 
 	function parse() {
