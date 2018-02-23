@@ -58,8 +58,21 @@
 		canvas.height = height;
 
 		var context = canvas.getContext("2d");
-		context.filter = "blur(20px);";
 		context.drawImage(video, 0, 0, width, height);
+
+		var row = height / 2;
+		var data = context.getImageData(0, 0, width, height).data.slice(row * width * 3, width * 3);
+
+		for (var i = 0; i < data.length; i += 3) {
+			var r = data[i];
+			var g = data[i + 1];
+			var b = data[i + 2];
+
+			b = 0;
+
+			context.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
+			context.fillRect(row, i / 3, 1, 1);
+		}
 
 		setInterval(parse, 200);
 	}
