@@ -30,9 +30,10 @@
 
 		<canvas id="canvas" style="
 			position: fixed;
+			width: 100vw;
 			top: 50%;
 			left: 0;
-			transform: scaleY(20)"></canvas>
+			transform: scaleY(5)"></canvas>
 
 	</body>
 
@@ -68,12 +69,14 @@
 		console.log(data);
 
 		for (var i = 0; i < width; i++) {
-			var r = data[i * 4];
-			var g = data[i * 4 + 1];
-			var b = data[i * 4 + 2];
-			var a = data[i * 4 + 3];
+			var r = data[i * 4] / 255.0;
+			var g = data[i * 4 + 1] / 255.0;
+			var b = data[i * 4 + 2] / 255.0;
 
-			context.fillStyle = "rgb(" + r + ", 0, 0)";
+			var c = r * 0.299 + g * 0.587 + b * 0.114;
+			c = c > 0.5 ? 1 : 0;
+
+			context.fillStyle = "rgb(" + c * 255 + ", 0, 0)";
 			context.fillRect(i, 0, 1, 1);
 		}
 	}
