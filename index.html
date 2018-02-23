@@ -47,7 +47,7 @@
 		navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
 			video.src = window.URL.createObjectURL(stream);
 			video.play();
-			setInterval(parse, 100);
+			parse();
 		});
 	}
 
@@ -59,7 +59,8 @@
 
 		var context = canvas.getContext("2d");
 		context.drawImage(video, 0, 0, width, height);
+		context.filter = "blur(2) saturate(0%)";
 
-		setInterval(parse, 100);
+		setInterval(parse, 200);
 	}
 </script>
