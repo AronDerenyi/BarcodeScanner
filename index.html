@@ -66,12 +66,11 @@
 
 		context.drawImage(video, 0, 0, width, height);
 
-//		var row = height / 2;
-//		var data = context.getImageData(0, 0, width, height).data.slice(row * width * 3, (row + 1) * width * 3);
-//		if (first) {
-//			console.log(data);
-//			first = false;
-//		}
+		var data = context.getImageData(0, height / 2, width, 1);
+		if (first) {
+			console.log(data);
+			first = false;
+		}
 //
 //		for (var i = 0; i < width; i++) {
 //			var r = data[i * 3];
