@@ -61,10 +61,10 @@
 		var width = video.videoWidth;
 		var height = video.videoHeight;
 		canvas.width = width;
-		canvas.height = 1;
+		canvas.height = height;
 
-		context.drawImage(video, 0, height / 2, width, height);
-		var data = context.getImageData(0, 0, width, 1).data;
+		context.drawImage(video, 0, -height / 2, width, height);
+		var data = context.getImageData(0, height / 2, width, 1).data;
 		console.log(data);
 
 		for (var i = 0; i < width; i++) {
