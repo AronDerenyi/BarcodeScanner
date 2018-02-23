@@ -61,13 +61,15 @@
 	function parse() {
 		var width = video.videoWidth;
 		var height = video.videoHeight;
+		var i;
+
 		canvas.width = width;
 		canvas.height = 1;
 
+		// Retrieving the middle row of pixels from the video
 		context.drawImage(video, 0, -height / 2, width, height);
 		var imageData = context.getImageData(0, 0, width, 1).data;
 		var data = [];
-		var i;
 
 		// Creating gray scale
 		for (i = 0; i < width; i++) {
@@ -78,7 +80,7 @@
 		}
 
 		// Averaging together the neighbouring pixels
-		var originalData = data.copy();
+		var originalData = data.slice();
 		for (i = 0; i < width; i++) {
 			var o1 = i > 0 ? originalData[i - 1] : 0;
 			var o2 = originalData[i];
