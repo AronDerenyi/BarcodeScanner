@@ -41,8 +41,7 @@
 	var video = document.getElementById("video");
 //	var canvas = document.createElement("canvas");
 	var canvas = document.getElementById("canvas");
-	var context = canvas.getContext("2d", { willReadFrequently: true });
-	var imageData = null;
+	var context = canvas.getContext("2d");
 
 	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 		navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
@@ -54,7 +53,7 @@
 
 	function loop() {
 		if (video.videoWidth > 0 && video.videoHeight > 0) parse();
-		setInterval(loop, 200);
+		setTimeout(loop, 200);
 	}
 
 	function parse() {
@@ -75,7 +74,7 @@
 			g = 0;
 			b = 0;
 
-			context.fillStyle = "rgb(" + r + ", 0, 0)";
+			context.fillStyle = "rgb(" + (r / 2 + 127) + ", 0, 0)";
 			context.fillRect(i, height / 2, 1, 2);
 		}
 	}
