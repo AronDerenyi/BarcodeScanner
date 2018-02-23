@@ -9,8 +9,7 @@
 
 	</head>
 
-	<body style="
-		background: black;">
+	<body style="background: black;">
 
 		<video id="video" autoplay style="
 			width: 100vw;
@@ -20,14 +19,14 @@
 			left: 0;
 			background: black;"></video>
 
-		<div style="
-			width: 100vw;
-			height: 0;
-			position: fixed;
-			top: 50%;
-			left: 0;
-			border: 1px solid rgba(255, 0, 0, 1);
-			mix-blend-mode: color"></div>
+		<!--<div style="-->
+			<!--width: 100vw;-->
+			<!--height: 0;-->
+			<!--position: fixed;-->
+			<!--top: 50%;-->
+			<!--left: 0;-->
+			<!--border: 1px solid rgba(255, 0, 0, 1);-->
+			<!--mix-blend-mode: color"></div>-->
 
 		<canvas id="canvas" style="
 			position: fixed;
@@ -47,8 +46,13 @@
 		navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
 			video.src = window.URL.createObjectURL(stream);
 			video.play();
-			parse();
+			loop();
 		});
+	}
+
+	function loop() {
+		if (video.videoWidth > 0 && video.videoHeight > 0) parse();
+		setInterval(loop, 200);
 	}
 
 	function parse() {
@@ -73,7 +77,5 @@
 			context.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
 			context.fillRect(row, i / 3, 1, 1);
 		}
-
-		setInterval(parse, 200);
 	}
 </script>
