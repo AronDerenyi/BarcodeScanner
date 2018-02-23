@@ -55,6 +55,8 @@
 		setInterval(loop, 200);
 	}
 
+	var first = true;
+
 	function parse() {
 		var width = video.videoWidth;
 		var height = video.videoHeight;
@@ -66,7 +68,10 @@
 
 		var row = height / 2;
 		var data = context.getImageData(0, 0, width, height).data.slice(row * width * 3, width * 3);
-		console.log(data);
+		if (first) {
+			console.log(data);
+			first = false;
+		}
 
 		for (var i = 0; i < width; i++) {
 			var r = data[i * 3];
