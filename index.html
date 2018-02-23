@@ -19,14 +19,14 @@
 			left: 0;
 			background: black;"></video>
 
-		<div style="
-			width: 100vw;
-			height: 0;
-			position: fixed;
-			top: 50%;
-			left: 0;
-			border: 1px solid rgba(255, 0, 0, 1);
-			mix-blend-mode: lighten"></div>
+		<!--<div style="-->
+			<!--width: 100vw;-->
+			<!--height: 0;-->
+			<!--position: fixed;-->
+			<!--top: 50%;-->
+			<!--left: 0;-->
+			<!--border: 1px solid rgba(255, 0, 0, 1);-->
+			<!--mix-blend-mode: lighten"></div>-->
 
 		<canvas id="canvas" style="
 			position: fixed;
@@ -39,7 +39,8 @@
 
 <script>
 	var video = document.getElementById("video");
-	var canvas = document.createElement("canvas");
+//	var canvas = document.createElement("canvas");
+	var canvas = document.getElementById("canvas");
 	var context = canvas.getContext("2d");
 	var imageData = null;
 
@@ -66,12 +67,18 @@
 
 		if (imageData === null) imageData = context.getImageData(0, height / 2, width, 1);
 		var data = imageData.data;
-//		console.log(data);
-//
-//		for (var i = 0; i < width; i++) {
-//			var r = data[i * 3];
-//			var g = data[i * 3 + 1];
-//			var b = data[i * 3 + 2];
-//		}
+
+		for (var i = 0; i < width; i++) {
+			var r = data[i * 4];
+			var g = data[i * 4 + 1];
+			var b = data[i * 4 + 2];
+			var a = data[i * 4 + 2];
+
+			g = 0;
+			b = 0;
+
+			context.fillStyle = "rgb(" + a + ", 0, 0)"
+			context.fillRect(i, height / 2, 1, 2);
+		}
 	}
 </script>
