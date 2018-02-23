@@ -86,7 +86,7 @@
 
 		// Drawing for debugging
 		for (i = 0; i < width - 1; i++) {
-			context.fillStyle = "rgb(" + difference[i] * 255 + ", 255, " +  -difference[i] * 255 + ")";
+			context.fillStyle = "rgb(" + (difference[i] * 255) + ", 0, " + (-difference[i] * 255) + ")";
 			context.fillRect(i, 0, 1, 1);
 		}
 	}
