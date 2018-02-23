@@ -19,14 +19,14 @@
 			left: 0;
 			background: black;"></video>
 
-		<!--<div style="-->
-			<!--width: 100vw;-->
-			<!--height: 0;-->
-			<!--position: fixed;-->
-			<!--top: 50%;-->
-			<!--left: 0;-->
-			<!--border: 1px solid rgba(255, 0, 0, 1);-->
-			<!--mix-blend-mode: color"></div>-->
+		<div style="
+			width: 100vw;
+			height: 0;
+			position: fixed;
+			top: 50%;
+			left: 0;
+			border: 1px solid rgba(255, 0, 0, 1);
+			mix-blend-mode: color"></div>
 
 		<canvas id="canvas" style="
 			position: fixed;
@@ -66,16 +66,12 @@
 
 		var row = height / 2;
 		var data = context.getImageData(0, 0, width, height).data.slice(row * width * 3, width * 3);
+		console.log(data);
 
-		for (var i = 0; i < data.length; i += 3) {
-			var r = data[i];
-			var g = data[i + 1];
-			var b = data[i + 2];
-
-			b = 0;
-
-			context.fillStyle = "rgb(" + r + ", " + g + ", " + b + ")";
-			context.fillRect(row, i / 3, 1, 10);
+		for (var i = 0; i < width; i++) {
+			var r = data[i * 3];
+			var g = data[i * 3 + 1];
+			var b = data[i * 3 + 2];
 		}
 	}
 </script>
