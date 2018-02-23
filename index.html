@@ -58,8 +58,8 @@
 		canvas.height = height;
 
 		var context = canvas.getContext("2d");
-		context.drawImage(video, 0, 0, width, height);
 		context.filter = "blur(2) saturate(0%)";
+		context.drawImage(video, 0, 0, width, height);
 
 		setInterval(parse, 200);
 	}
