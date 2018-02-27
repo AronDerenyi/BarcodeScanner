@@ -11,13 +11,6 @@
 
 	<body style="background: black;">
 
-		<p style="
-				position: fixed;
-				top: 0;
-				left: 0;
-				color: white;
-				font-size: 12px;">1</p>
-
 		<video id="video" autoplay style="
 			width: 100vw;
 			height: 100vh;
@@ -41,6 +34,13 @@
 			top: 50%;
 			left: 0;
 			transform: scaleY(5)"></canvas>
+
+		<p style="
+			position: fixed;
+			top: 0;
+			left: 0;
+			color: white;
+			font-size: 12px;">1</p>
 
 	</body>
 
@@ -94,11 +94,18 @@
 		}
 
 		// Drawing for debugging
-		var lum = luminance[0];
 		for (i = 0; i < width; i++) {
-			context.fillStyle = "rgb(" + Math.floor(lum * 255) + ", 0, 0)";
+			var d = difference[i];
+			var r = d * 255;
+			var g = 0;
+			var b = -d * 255;
+
+			context.fillStyle = "rgb(" +
+				Math.min(Math.max(Math.floor(r), 0), 255) + ", " +
+				Math.min(Math.max(Math.floor(g), 0), 255) + ", " +
+				Math.min(Math.max(Math.floor(b), 0), 255) + ")";
+
 			context.fillRect(i, 0, 1, 1);
-			lum += difference[i];
 		}
 	}
 </script>
