@@ -120,7 +120,7 @@
 
 			if (groupStart === -1 || direction !== groupDirection) {
 				if (groupStart >= 0) {
-					groups.add({
+					groups.push({
 						start: groupStart,
 						end: i - 1,
 						length: i - groupStart,
