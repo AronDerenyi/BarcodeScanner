@@ -11,6 +11,13 @@
 
 	<body style="background: black;">
 
+		<p style="
+				position: fixed;
+				top: 0;
+				left: 0;
+				color: white;
+				font-size: 12px;">1</p>
+
 		<video id="video" autoplay style="
 			width: 100vw;
 			height: 100vh;
@@ -89,7 +96,7 @@
 		// Drawing for debugging
 		var lum = luminance[0];
 		for (i = 0; i < width; i++) {
-			context.fillStyle = "rgb(" + Math.floor(luminance[i] * 255) + ", 0, 0)";
+			context.fillStyle = "rgb(" + Math.floor(lum * 255) + ", 0, 0)";
 			context.fillRect(i, 0, 1, 1);
 			lum += difference[i];
 		}
