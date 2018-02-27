@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">12345</p>
+			font-size: 12px;">12</p>
 
 	</body>
 
@@ -51,14 +51,44 @@
 	var canvas = document.getElementById("canvas");
 	var context = canvas.getContext("2d");
 
-	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-			stream.getVideoTracks()[0].applyConstraints({ advanced: [ { torch: true } ] });
-			video.src = window.URL.createObjectURL(stream);
-			video.play();
-			loop();
+	if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+		navigator.mediaDevices.enumerateDevices().then(function(devices) {
+			const cameras = devices.filter(function(device) {
+				return device.kind === 'videoinput'
+			});
+			if (cameras.length === 0) {
+				throw 'No camera found on this device.';
+			}
+			const camera = cameras[cameras.length - 1];
+
+			navigator.mediaDevices.getUserMedia({
+				video: {
+					deviceId: camera.deviceId,
+					facingMode: "environment"
+				}
+			}).then(function(stream) {
+				video.src = window.URL.createObjectURL(stream);
+				video.play();
+
+				const track = stream.getVideoTracks()[0];
+				const imageCapture = new ImageCapture(track);
+				const photoCapabilities = imageCapture.getPhotoCapabilities().then(function() {
+					track.applyConstraints({
+						advanced: [{torch: true}]
+					});
+				});
+			});
 		});
 	}
+
+//	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+//		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+//			stream.getVideoTracks()[0].applyConstraints({ advanced: [ { torch: true } ] });
+//			video.src = window.URL.createObjectURL(stream);
+//			video.play();
+//			loop();
+//		});
+//	}
 
 	function loop() {
 		if (video.videoWidth > 0 && video.videoHeight > 0) parse();
@@ -68,7 +98,6 @@
 	function parse() {
 		var width = video.videoWidth;
 		var height = video.videoHeight;
-		var i;
 
 		canvas.width = width;
 		canvas.height = 1;
@@ -80,7 +109,7 @@
 		var difference = [];
 
 		// Creating luminance
-		for (i = 0; i < width; i++) {
+		for (var i = 0; i < width; i++) {
 			var r = imageData[i * 4] / 255.0;
 			var g = imageData[i * 4 + 1] / 255.0;
 			var b = imageData[i * 4 + 2] / 255.0;
@@ -88,14 +117,14 @@
 		}
 
 		// Creating light difference map
-		for (i = 0; i < width; i++) {
+		for (var i = 0; i < width; i++) {
 			var prevLum = luminance[(i > 0) ? (i - 1) : 0];
 			var nextLum = luminance[(i < width - 1) ? (i + 1) : (width - 1)];
 			difference[i] = nextLum - prevLum;
 		}
 
 		// Drawing for debugging
-		for (i = 0; i < width; i++) {
+		for (var i = 0; i < width; i++) {
 			var d = difference[i];
 			var r = d * 255 * 10;
 			var g = 0;
