@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">24</p>
+			font-size: 12px;">12</p>
 
 	</body>
 
@@ -244,7 +244,7 @@
 		data.splice(0, 3);
 		for (var i = 0; i < 6; i++) {
 			var str = data.splice(0, 7).join("");
-			var number = (i % 2 === 0 ? leftHandOdd : leftHandEven)[str];
+			var number = leftHandOdd[str];
 
 			if (!number) {
 				console.log("Couldn't parse number on left " + (i % 2 === 0 ? "odd" : "even") + ": " + str);
