@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">12</p>
+			font-size: 12px;">24</p>
 
 	</body>
 
@@ -121,8 +121,7 @@
 			if (groupStart === -1 || direction !== groupDirection) {
 				if (groupStart >= 0 && groupDirection !== 0) {
 					var groupLength = i - groupStart;
-					var centerOffset = groupLength / 6;
-					var groupCenter = groupStart + groupLength / 2 + centerOffset * groupDirection;
+					var groupCenter = groupStart + groupLength / 2;
 					groups.push({
 						start: groupStart,
 						length: groupLength,
