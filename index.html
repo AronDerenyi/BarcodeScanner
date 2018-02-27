@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">12</p>
+			font-size: 12px;">24</p>
 
 	</body>
 
@@ -218,10 +218,9 @@
 			"1001110": 5, "1010000": 6, "1000100": 7, "1001000": 8, "1110100": 9};
 
 		var numbers = [];
-		data.splice(3);
+		data.splice(0, 3);
 		for (var i = 0; i < 6; i++) {
-			var str = "";
-			for (var j = 0; j < 7; j++) str += data[i * 7 + j];
+			var str = data.splice(0, 7).join("");
 			var number = (i % 2 === 0 ? leftHandOdd : leftHandEven)[str];
 
 			if (!number) {
@@ -231,10 +230,9 @@
 				numbers.push(number);
 			}
 		}
-		data.splice(5);
+		data.splice(0, 5);
 		for (var i = 0; i < 6; i++) {
-			var str = "";
-			for (var j = 0; j < 7; j++) str += data[i * 7 + j];
+			var str = data.splice(0, 7).join("");
 			var number = rightHand[str];
 
 			if (!number) {
@@ -244,7 +242,7 @@
 				numbers.push(number);
 			}
 		}
-		data.splice(3);
+		data.splice(0, 3);
 
 		return numbers;
 	}
