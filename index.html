@@ -70,11 +70,11 @@
 	}
 
 	function loop() {
-		if (video.videoWidth > 0 && video.videoHeight > 0) parse();
+		if (video.videoWidth > 0 && video.videoHeight > 0) process();
 		setTimeout(loop, 100);
 	}
 
-	function parse() {
+	function process() {
 		var width = video.videoWidth;
 		var height = video.videoHeight;
 
@@ -138,7 +138,7 @@
 		// Try to interpret
 		var result = null;
 		for (var i = 0; i < groups.length && result === null; i++) {
-			result = parse(groups.slice(i));
+			result = parse(groups.splice(i));
 		}
 		if (result) alert("Something!");
 
@@ -158,7 +158,7 @@
 	}
 
 	function parse(groups) {
-		var leftGuard = groups.slice(0, 4);
+		var leftGuard = groups.splice(0, 4);
 
 		// Validation
 		if (leftGuard[0].direction !== -1) return null;
