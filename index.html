@@ -136,6 +136,13 @@
 			}
 		}
 
+		// Try to interpret
+		var result = null;
+		for (var i = 0; i < groups.length && result === null; i++) {
+			result = parseEAN_13(groups.slice(i));
+		}
+		if (result) alert(result.join(""));
+
 		// Drawing for debugging
 		groups.forEach(function(group) {
 			var r = group.direction * 255;
@@ -149,13 +156,6 @@
 
 			context.fillRect(group.center, 0, 1, 1);
 		});
-
-		// Try to interpret
-		var result = null;
-		for (var i = 0; i < groups.length && result === null; i++) {
-			result = parseEAN_13(groups.slice(i));
-		}
-		if (result) alert(result.join(""));
 	}
 
 	function parseEAN_13(groups) {
@@ -209,35 +209,35 @@
 //			return null;
 //		}
 
-		var start = groups[3].center;
-		var end = groups[27].center;
-		var co = "010111101000110001101011000100100110010011";
-
-		context.fillStyle = "rgb(0, 0, 0)";
-		context.fillRect(0, 0, canvas.width, 1);
-
-		for (var i = 3; i < 28; i++) {
-			var group = groups[i];
-			var center = (group.center - start) / (end - start);
-
-			var r = group.direction * 255;
-			var g = 0;
-			var b = -group.direction * 255;
-
-			context.fillStyle = "rgb(" +
-				Math.min(Math.max(Math.floor(r), 0), 255) + ", " +
-				Math.min(Math.max(Math.floor(g), 0), 255) + ", " +
-				Math.min(Math.max(Math.floor(b), 0), 255) + ")";
-
-			context.fillRect(center * canvas.width, 0, 1, 1);
-		}
-
-		for (var i = 0; i < 43; i++) {
-			context.fillStyle = "rgb(255, 255, 255)";
-			context.fillRect(i * canvas.width / 42, 0, 1, 1);
-		}
-
-		return null;
+//		var start = groups[3].center;
+//		var end = groups[27].center;
+//		var co = "010111101000110001101011000100100110010011";
+//
+//		context.fillStyle = "rgb(0, 0, 0)";
+//		context.fillRect(0, 0, canvas.width, 1);
+//
+//		for (var i = 3; i < 28; i++) {
+//			var group = groups[i];
+//			var center = (group.center - start) / (end - start);
+//
+//			var r = group.direction * 255;
+//			var g = 0;
+//			var b = -group.direction * 255;
+//
+//			context.fillStyle = "rgb(" +
+//				Math.min(Math.max(Math.floor(r), 0), 255) + ", " +
+//				Math.min(Math.max(Math.floor(g), 0), 255) + ", " +
+//				Math.min(Math.max(Math.floor(b), 0), 255) + ")";
+//
+//			context.fillRect(center * canvas.width, 0, 1, 1);
+//		}
+//
+//		for (var i = 0; i < 43; i++) {
+//			context.fillStyle = "rgb(255, 255, 255)";
+//			context.fillRect(i * canvas.width / 42, 0, 1, 1);
+//		}
+//
+//		return null;
 
 		var start = groups[0].center;
 		var end = groups[59].center;
