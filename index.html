@@ -241,7 +241,7 @@
 		for (var i = 0; i < 42; i++) {
 			var bit;
 			for (var j = 3; j < 27; j++) {
-				if ((groups[j].center - start) / (end - start) < i + 0.5 && (groups[j + 1].center - start) / (end - start) > i + 0.5) {
+				if (((groups[j].center - start) / (end - start)) < i + 0.5 && ((groups[j + 1].center - start) / (end - start)) > i + 0.5) {
 					bit = groups[j].direction < 0 ? 1 : 0;
 					break;
 				}
