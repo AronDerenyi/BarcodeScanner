@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">20</p>
+			font-size: 12px;">21</p>
 
 	</body>
 
@@ -176,34 +176,24 @@
 		console.log(leftGuard.length + ", " + centerGuard.length + ", " + rightGuard.length);
 
 		var bitSize = 0;
-		bitSize = leftGuard[1].center - leftGuard[0].center;
-		console.log("l: " + bitSize);
-		bitSize = leftGuard[2].center - leftGuard[1].center;
-		console.log("l: " + bitSize);
-		bitSize = leftGuard[3].center - leftGuard[2].center;
-		console.log("l: " + bitSize);
-		bitSize = centerGuard[1].center - centerGuard[0].center;
-		console.log("c: " + bitSize);
-		bitSize = centerGuard[2].center - centerGuard[1].center;
-		console.log("c: " + bitSize);
-		bitSize = centerGuard[3].center - centerGuard[2].center;
-		console.log("c: " + bitSize);
-		bitSize = centerGuard[4].center - centerGuard[3].center;
-		console.log("c: " + bitSize);
-		bitSize = centerGuard[5].center - centerGuard[4].center;
-		console.log("c: " + bitSize);
-		bitSize = rightGuard[1].center - rightGuard[0].center;
-		console.log("r: " + bitSize);
-		bitSize = rightGuard[2].center - rightGuard[1].center;
-		console.log("r: " + bitSize);
-		bitSize = rightGuard[3].center - rightGuard[2].center;
-		console.log("r: " + bitSize);
-		//bitSize /= 11;
+		bitSize += leftGuard[1].center - leftGuard[0].center;
+		bitSize += leftGuard[2].center - leftGuard[1].center;
+		bitSize += leftGuard[3].center - leftGuard[2].center;
+		bitSize += centerGuard[1].center - centerGuard[0].center;
+		bitSize += centerGuard[2].center - centerGuard[1].center;
+		bitSize += centerGuard[3].center - centerGuard[2].center;
+		bitSize += centerGuard[4].center - centerGuard[3].center;
+		bitSize += centerGuard[5].center - centerGuard[4].center;
+		bitSize += rightGuard[1].center - rightGuard[0].center;
+		bitSize += rightGuard[2].center - rightGuard[1].center;
+		bitSize += rightGuard[3].center - rightGuard[2].center;
+		bitSize /= 11;
 
 		var data = [];
 		for (var i = 0; i < 59; i++) {
 			var barSize = groups[i + 1] - groups[i].center;
 			var bits = Math.round(barSize / bitSize);
+			if (bits > 0) console.log(bits);
 			if (bits < 1) {
 				console.log("Bar too small: " + bits + " bits");
 				return null;
