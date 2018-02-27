@@ -96,9 +96,9 @@
 		// Drawing for debugging
 		for (i = 0; i < width; i++) {
 			var d = difference[i];
-			var r = d * 255;
+			var r = d * 255 * 10;
 			var g = 0;
-			var b = -d * 255;
+			var b = -d * 255 * 10;
 
 			context.fillStyle = "rgb(" +
 				Math.min(Math.max(Math.floor(r), 0), 255) + ", " +
