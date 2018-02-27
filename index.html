@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">24</p>
+			font-size: 12px;">12</p>
 
 	</body>
 
@@ -120,8 +120,8 @@
 
 			if (groupStart === -1 || direction !== groupDirection) {
 				if (groupStart >= 0 && groupDirection !== 0) {
-					var centerOffset = groupLength / 4;
 					var groupLength = i - groupStart;
+					var centerOffset = groupLength / 6;
 					var groupCenter = groupStart + groupLength / 2 + centerOffset * groupDirection;
 					groups.push({
 						start: groupStart,
@@ -211,28 +211,15 @@
 
 		var start = groups[0].center;
 		var end = groups[59].center;
-		var bitSize = (end - start) / 95;
-		var quantizedGroups = {};
 		var data = [];
 
-		groups.forEach(function(group) {
-			var position = Math.round((group.center - start) / (end - start) * (95 + 1));
-			if (quantizedGroups[position]) {
-				console.log("Position already occupied by another group. Line is too thin.");
-				return null;
-			} else {
-				quantizedGroups[position] = group;
-			}
-		});
-
-		var bit;
+		var prevGroupIndex = 0;
 		for (var i = 0; i < 95; i++) {
-			var quantizedGroup = quantizedGroups[i];
-			if (quantizedGroup) {
-				if (quantizedGroup.direction < 0) bit = 1;
-				if (quantizedGroup.direction > 0) bit = 0;
+			while ((groups[prevGroupIndex + 1].center - start) / (end - start) * 95 < i) {
+				prevGroupIndex++;
 			}
-			data[i] = bit;
+			if (groups[prevGroupIndex].direction < 0) data[i] = 1;
+			if (groups[prevGroupIndex].direction > 0) data[i] = 0;
 		}
 
 		var leftHandOdd = {"0001101": 0, "0011001": 1, "0010011": 2, "0111101": 3, "0100011": 4,
