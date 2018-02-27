@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">24</p>
+			font-size: 12px;">12</p>
 
 	</body>
 
@@ -252,7 +252,7 @@
 			for (var j = 0; j < 10 && confidence === 7; j++) {
 				var localConfidence = 0;
 				for (var k = 0; k < 7; k++) if (codes.L[j].charAt(k) === str.charAt(k)) localConfidence++;
-				if (localConfidence > confidence) {
+				if (localConfidence >= confidence) {
 					confidence = localConfidence;
 					character = j;
 					type = "L";
@@ -261,20 +261,15 @@
 			for (var j = 0; j < 10 && confidence === 7; j++) {
 				var localConfidence = 0;
 				for (var k = 0; k < 7; k++) if (codes.G[j].charAt(k) === str.charAt(k)) localConfidence++;
-				if (localConfidence > confidence) {
+				if (localConfidence >= confidence) {
 					confidence = localConfidence;
 					character = j;
 					type = "G";
 				}
 			}
 
-			if (!character) {
-				console.log("Couldn't parse character on left: " + str);
-				return null;
-			} else {
-				characters.push(character);
-				types.push(type);
-			}
+			characters.push(character);
+			types.push(type);
 		}
 		data.splice(0, 5);
 		for (var i = 0; i < 6; i++) {
@@ -285,18 +280,13 @@
 			for (var j = 0; j < 10 && confidence === 7; j++) {
 				var localConfidence = 0;
 				for (var k = 0; k < 7; k++) if (codes.R[j].charAt(k) === str.charAt(k)) localConfidence++;
-				if (localConfidence > confidence) {
+				if (localConfidence >= confidence) {
 					confidence = localConfidence;
 					character = j;
 				}
 			}
 
-			if (!character) {
-				console.log("Couldn't parse number on right: " + str);
-				return null;
-			} else {
-				characters.push(character);
-			}
+			characters.push(character);
 		}
 		data.splice(0, 3);
 		return numbers;
