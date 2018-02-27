@@ -136,13 +136,6 @@
 			}
 		}
 
-		// Try to interpret
-		var result = null;
-		for (var i = 0; i < groups.length && result === null; i++) {
-			result = parseEAN_13(groups.slice(i));
-		}
-		if (result) alert(result.join(""));
-
 		// Drawing for debugging
 		groups.forEach(function(group) {
 			var r = group.direction * 255;
@@ -156,6 +149,13 @@
 
 			context.fillRect(group.center, 0, 1, 1);
 		});
+
+		// Try to interpret
+		var result = null;
+		for (var i = 0; i < groups.length && result === null; i++) {
+			result = parseEAN_13(groups.slice(i));
+		}
+		if (result) alert(result.join(""));
 	}
 
 	function parseEAN_13(groups) {
