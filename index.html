@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">1</p>
+			font-size: 12px;">12345</p>
 
 	</body>
 
@@ -53,6 +53,7 @@
 
 	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+			stream.getVideoTracks()[0].applyConstraints({ advanced: [ { torch: true } ] });
 			video.src = window.URL.createObjectURL(stream);
 			video.play();
 			loop();
