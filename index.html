@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">12</p>
+			font-size: 12px;">24</p>
 
 	</body>
 
@@ -141,7 +141,7 @@
 		for (var i = 0; i < groups.length && result === null; i++) {
 			result = parseEAN_13(groups.slice(i));
 		}
-		if (result) alert(result.toString());
+		if (result) alert(result.join(""));
 
 		// Drawing for debugging
 		groups.forEach(function(group) {
@@ -289,6 +289,22 @@
 			characters.push(character);
 		}
 		data.splice(0, 3);
-		return characters;
+
+		var str = types.join("");
+		var confidence = 0;
+		var type = null;
+
+		for (var j = 0; j < 10 && confidence < 6; j++) {
+			var localConfidence = 0;
+			for (var k = 0; k < 6; k++) if (codes.R[j].charAt(k) === str.charAt(k)) localConfidence++;
+			if (localConfidence >= confidence) {
+				confidence = localConfidence;
+				type = j;
+			}
+		}
+
+		var numbers = [type].concat(characters);
+
+		return numbers;
 	}
 </script>
