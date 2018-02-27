@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">24</p>
+			font-size: 12px;">12</p>
 
 	</body>
 
@@ -224,7 +224,7 @@
 			var number = (i % 2 === 0 ? leftHandOdd : leftHandEven)[str];
 
 			if (!number) {
-				console.log("Couldn't parse number: " + str);
+				console.log("Couldn't parse number on left " + (i % 2 === 0 ? "odd" : "even") + ": " + str);
 				return null;
 			} else {
 				numbers.push(number);
@@ -236,7 +236,7 @@
 			var number = rightHand[str];
 
 			if (!number) {
-				console.log("Couldn't parse number: " + str);
+				console.log("Couldn't parse number on right: " + str);
 				return null;
 			} else {
 				numbers.push(number);
