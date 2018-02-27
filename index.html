@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">12</p>
+			font-size: 12px;">24</p>
 
 	</body>
 
@@ -51,33 +51,38 @@
 	var canvas = document.getElementById("canvas");
 	var context = canvas.getContext("2d");
 
-	if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-		navigator.mediaDevices.getUserMedia({
-			video: {
-				facingMode: "environment"
-			}
-		}).then(function(stream) {
-			video.src = window.URL.createObjectURL(stream);
-			video.play();
+//	if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+//		navigator.mediaDevices.getUserMedia({
+//			video: {
+//				facingMode: "environment"
+//			}
+//		}).then(function(stream) {
+//			video.src = window.URL.createObjectURL(stream);
+//			video.play();
+//
+//			const track = stream.getVideoTracks()[0];
+//			const imageCapture = new ImageCapture(track);
+//			const photoCapabilities = imageCapture.getPhotoCapabilities().then(function() {
+//				track.applyConstraints({
+//					advanced: [{torch: true}]
+//				});
+//			});
+//		});
+//	}
 
-			const track = stream.getVideoTracks()[0];
-			const imageCapture = new ImageCapture(track);
-			const photoCapabilities = imageCapture.getPhotoCapabilities().then(function() {
+	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+			new ImageCapture(stream.getVideoTracks()[0]).getPhotoCapabilities().then(function() {
 				track.applyConstraints({
 					advanced: [{torch: true}]
 				});
 			});
+
+			video.src = window.URL.createObjectURL(stream);
+			video.play();
+			loop();
 		});
 	}
-
-//	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-//		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-//			stream.getVideoTracks()[0].applyConstraints({ advanced: [ { torch: true } ] });
-//			video.src = window.URL.createObjectURL(stream);
-//			video.play();
-//			loop();
-//		});
-//	}
 
 	function loop() {
 		if (video.videoWidth > 0 && video.videoHeight > 0) parse();
