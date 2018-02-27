@@ -69,15 +69,6 @@
 		});
 	}
 
-//	if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-//		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-//			stream.getVideoTracks()[0].applyConstraints({ advanced: [ { torch: true } ] });
-//			video.src = window.URL.createObjectURL(stream);
-//			video.play();
-//			loop();
-//		});
-//	}
-
 	function loop() {
 		if (video.videoWidth > 0 && video.videoHeight > 0) parse();
 		setTimeout(loop, 100);
@@ -95,6 +86,7 @@
 		var imageData = context.getImageData(0, 0, width, 1).data;
 		var luminance = [];
 		var difference = [];
+		var groups = [];
 
 		// Creating luminance
 		for (var i = 0; i < width; i++) {
@@ -104,26 +96,55 @@
 			luminance[i] = r * 0.299 + g * 0.587 + b * 0.114;
 		}
 
-		// Creating light difference map
+		// Creating luminance difference
 		for (var i = 0; i < width; i++) {
 			var prevLum = luminance[(i > 0) ? (i - 1) : 0];
 			var nextLum = luminance[(i < width - 1) ? (i + 1) : (width - 1)];
 			difference[i] = nextLum - prevLum;
 		}
 
-		// Drawing for debugging
+		// Grouping luminance difference
+		var threshold = 0.05;
+		var groupStart = -1;
+		var groupDirection = 0;
 		for (var i = 0; i < width; i++) {
-			var d = difference[i];
-			var r = d * 255 * 10;
+			var direction = difference[i];
+
+			if (direction < -threshold) {
+				direction = -1;
+			} else if (direction > threshold) {
+				direction = 1;
+			} else {
+				direction = 0;
+			}
+
+			if (groupStart === -1 || direction !== groupDirection) {
+				if (groupStart >= 0) {
+					groups.add({
+						start: groupStart,
+						end: i - 1,
+						length: i - groupStart,
+						direction: groupDirection
+					});
+				}
+
+				groupStart = i;
+				groupDirection = direction;
+			}
+		}
+
+		// Drawing for debugging
+		groups.forEach(function(group) {
+			var r = group.direction * 255;
 			var g = 0;
-			var b = -d * 255 * 10;
+			var b = -group.direction * 255;
 
 			context.fillStyle = "rgb(" +
 				Math.min(Math.max(Math.floor(r), 0), 255) + ", " +
 				Math.min(Math.max(Math.floor(g), 0), 255) + ", " +
 				Math.min(Math.max(Math.floor(b), 0), 255) + ")";
 
-			context.fillRect(i, 0, 1, 1);
-		}
+			context.fillRect(group.start, 0, group.length, 1);
+		});
 	}
 </script>
