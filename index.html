@@ -121,7 +121,7 @@
 			if (groupStart === -1 || direction !== groupDirection) {
 				if (groupStart >= 0 && groupDirection !== 0) {
 					var groupLength = i - groupStart;
-					var centerOffset = groupLength / 4;
+					var centerOffset = groupLength / 8;
 					var groupCenter = groupStart + groupLength / 2 + centerOffset * groupDirection;
 					groups.push({
 						start: groupStart,
@@ -252,6 +252,7 @@
 			for (var j = 0; j < 10 && confidence === 7; j++) {
 				var localConfidence = 0;
 				for (var k = 0; k < 7; k++) if (codes.L[j].charAt(k) === str.charAt(k)) localConfidence++;
+				if (localConfidence > 0) console.log(str);
 				if (localConfidence >= confidence) {
 					confidence = localConfidence;
 					character = j;
