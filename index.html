@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">12</p>
+			font-size: 12px;">24</p>
 
 	</body>
 
@@ -138,7 +138,7 @@
 		// Try to interpret
 		var result = null;
 		for (var i = 0; i < groups.length && result === null; i++) {
-			result = parse(groups.splice(i));
+			result = parse(groups.slice(i));
 		}
 		if (result) alert("Something!");
 
@@ -159,9 +159,7 @@
 
 	function parse(groups) {
 		if (groups.length < 4) return null;
-		var leftGuard = groups.splice(0, 4);
-		console.log(groups.length);
-		console.log(leftGuard);
+		var leftGuard = groups.slice(0, 4);
 
 		// Validation
 		if (leftGuard[0].direction !== -1) return null;
