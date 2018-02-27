@@ -218,7 +218,8 @@
 
 		for (var i = 3; i < 28; i++) {
 			var group = groups[i];
-			var c = (groups.center - start) / (end - start);
+			var center = (groups.center - start) / (end - start);
+			console.log(center);
 
 			var r = group.direction * 255;
 			var g = 0;
@@ -229,7 +230,7 @@
 				Math.min(Math.max(Math.floor(g), 0), 255) + ", " +
 				Math.min(Math.max(Math.floor(b), 0), 255) + ")";
 
-			context.fillRect(c * canvas.width, 0, 1, 1);
+			context.fillRect(center * canvas.width, 0, 1, 1);
 		}
 
 		for (var i = 0; i < 25; i++) {
