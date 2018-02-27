@@ -309,7 +309,7 @@
 		checksum = 10 - (checksum % 10);
 		checksum %= 10;
 		if (checksum !== numbers[12]) {
-			console.log("Checksum mismatch");
+			console.log("Checksum mismatch: " + numbers.join(""));
 			return null;
 		}
 
