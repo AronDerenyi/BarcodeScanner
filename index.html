@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">12</p>
+			font-size: 12px;">24</p>
 
 	</body>
 
@@ -296,14 +296,14 @@
 
 		for (var j = 0; j < 10 && confidence < 6; j++) {
 			var localConfidence = 0;
-			for (var k = 0; k < 6; k++) if (codes.R[j].charAt(k) === str.charAt(k)) localConfidence++;
+			for (var k = 0; k < 6; k++) if (codeTypes[j].charAt(k) === str.charAt(k)) localConfidence++;
 			if (localConfidence >= confidence) {
 				confidence = localConfidence;
 				type = j;
 			}
 		}
 
-		var numbers = characters.concat(types);
+		var numbers = [type].concat(characters);
 
 		return numbers;
 	}
