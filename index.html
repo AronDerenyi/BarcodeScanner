@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">28</p>
+			font-size: 12px;">12</p>
 
 	</body>
 
@@ -56,7 +56,10 @@
 			const track = stream.getVideoTracks()[0];
 			new ImageCapture(track).getPhotoCapabilities().then(function() {
 				track.applyConstraints({
-					advanced: [{torch: true}, {focusMode: "manual"}]
+					advanced: [
+						{torch: true},
+						{focusMode: "continuous"}
+					]
 				});
 			});
 
