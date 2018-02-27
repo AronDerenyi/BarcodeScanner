@@ -119,11 +119,13 @@
 			}
 
 			if (groupStart === -1 || direction !== groupDirection) {
-				if (groupStart >= 0) {
+				if (groupStart >= 0 && groupDirection !== 0) {
+					var groupLength = i - groupStart;
+					var groupCenter = groupStart + groupLength / 2;
 					groups.push({
 						start: groupStart,
-						end: i - 1,
-						length: i - groupStart,
+						length: groupLength,
+						center: groupCenter,
 						direction: groupDirection
 					});
 				}
@@ -132,6 +134,13 @@
 				groupDirection = direction;
 			}
 		}
+
+		// Try to interpret
+		var result = null;
+		for (var i = 0; i < groups.length && result === null; i++) {
+			result = parse(groups.subarray(i));
+		}
+		if (result) alert("Something!");
 
 		// Drawing for debugging
 		groups.forEach(function(group) {
@@ -146,5 +155,26 @@
 
 			context.fillRect(group.start, 0, group.length, 1);
 		});
+	}
+
+	function parse(groups) {
+		var leftGuard = groups.subarray(0, 4);
+
+		// Validation
+		if (leftGuard[0].direction !== -1) return null;
+		if (leftGuard[1].direction !==  1) return null;
+		if (leftGuard[2].direction !== -1) return null;
+		if (leftGuard[3].direction !==  1) return null;
+
+		// Calculating guard ranges
+		var leftGuardRanges = [
+			leftGuard[1].center - leftGuard[0].center,
+			leftGuard[2].center - leftGuard[1].center,
+			leftGuard[3].center - leftGuard[2].center
+		];
+		if (leftGuardRanges[0] / leftGuardRanges[2] > 1.5) return null;
+		if (leftGuardRanges[2] / leftGuardRanges[0] > 1.5) return null;
+
+		return true;
 	}
 </script>
