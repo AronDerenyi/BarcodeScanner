@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">12</p>
+			font-size: 12px;">24</p>
 
 	</body>
 
@@ -154,7 +154,7 @@
 				Math.min(Math.max(Math.floor(g), 0), 255) + ", " +
 				Math.min(Math.max(Math.floor(b), 0), 255) + ")";
 
-			context.fillRect(group.start, 0, group.length, 1);
+			context.fillRect(group.center, 0, 1, 1);
 		});
 	}
 
