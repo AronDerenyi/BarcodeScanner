@@ -52,30 +52,19 @@
 	var context = canvas.getContext("2d");
 
 	if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-		navigator.mediaDevices.enumerateDevices().then(function(devices) {
-			const cameras = devices.filter(function(device) {
-				return device.kind === 'videoinput'
-			});
-			if (cameras.length === 0) {
-				throw 'No camera found on this device.';
+		navigator.mediaDevices.getUserMedia({
+			video: {
+				facingMode: "environment"
 			}
-			const camera = cameras[cameras.length - 1];
+		}).then(function(stream) {
+			video.src = window.URL.createObjectURL(stream);
+			video.play();
 
-			navigator.mediaDevices.getUserMedia({
-				video: {
-					deviceId: camera.deviceId,
-					facingMode: "environment"
-				}
-			}).then(function(stream) {
-				video.src = window.URL.createObjectURL(stream);
-				video.play();
-
-				const track = stream.getVideoTracks()[0];
-				const imageCapture = new ImageCapture(track);
-				const photoCapabilities = imageCapture.getPhotoCapabilities().then(function() {
-					track.applyConstraints({
-						advanced: [{torch: true}]
-					});
+			const track = stream.getVideoTracks()[0];
+			const imageCapture = new ImageCapture(track);
+			const photoCapabilities = imageCapture.getPhotoCapabilities().then(function() {
+				track.applyConstraints({
+					advanced: [{torch: true}]
 				});
 			});
 		});
