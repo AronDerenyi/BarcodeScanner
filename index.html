@@ -52,21 +52,17 @@
 	var context = canvas.getContext("2d");
 
 	if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-		navigator.mediaDevices.getUserMedia({
-			video: {
-				facingMode: "environment"
-			}
-		}).then(function(stream) {
-			video.src = window.URL.createObjectURL(stream);
-			video.play();
-
+		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
 			const track = stream.getVideoTracks()[0];
-			const imageCapture = new ImageCapture(track);
-			const photoCapabilities = imageCapture.getPhotoCapabilities().then(function() {
+			new ImageCapture(track).getPhotoCapabilities().then(function() {
 				track.applyConstraints({
-					advanced: [{torch: true}]
+					advanced: [{torch: true}, {focusMode: "manual"}]
 				});
 			});
+
+			video.src = window.URL.createObjectURL(stream);
+			video.play();
+			loop();
 		});
 	}
 
