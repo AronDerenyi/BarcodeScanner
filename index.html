@@ -249,17 +249,16 @@
 			var character = null;
 			var type;
 
-			for (var j = 0; j < 10 && confidence === 7; j++) {
+			for (var j = 0; j < 10 && confidence < 7; j++) {
 				var localConfidence = 0;
 				for (var k = 0; k < 7; k++) if (codes.L[j].charAt(k) === str.charAt(k)) localConfidence++;
-				if (localConfidence > 0) console.log(str);
 				if (localConfidence >= confidence) {
 					confidence = localConfidence;
 					character = j;
 					type = "L";
 				}
 			}
-			for (var j = 0; j < 10 && confidence === 7; j++) {
+			for (var j = 0; j < 10 && confidence < 7; j++) {
 				var localConfidence = 0;
 				for (var k = 0; k < 7; k++) if (codes.G[j].charAt(k) === str.charAt(k)) localConfidence++;
 				if (localConfidence >= confidence) {
@@ -278,7 +277,7 @@
 			var confidence = 0;
 			var character = null;
 
-			for (var j = 0; j < 10 && confidence === 7; j++) {
+			for (var j = 0; j < 10 && confidence < 7; j++) {
 				var localConfidence = 0;
 				for (var k = 0; k < 7; k++) if (codes.R[j].charAt(k) === str.charAt(k)) localConfidence++;
 				if (localConfidence >= confidence) {
