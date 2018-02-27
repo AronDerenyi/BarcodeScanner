@@ -214,15 +214,23 @@
 		var data = [];
 
 		var prevGroupIndex = 0;
+		var str = "";
 		for (var i = 0; i < 95; i++) {
 			while ((groups[prevGroupIndex + 1].center - start) / (end - start) * 95 < i) {
 				prevGroupIndex++;
+				str += "|";
 			}
-			if (groups[prevGroupIndex].direction < 0) data[i] = 1;
-			if (groups[prevGroupIndex].direction > 0) data[i] = 0;
+			if (groups[prevGroupIndex].direction < 0) {
+				data[i] = 1;
+				str += "1";
+			}
+			if (groups[prevGroupIndex].direction > 0) {
+				data[i] = 0;
+				str += "0";
+			}
 		}
 
-		console.log(data.join(""));
+		console.log(str);
 
 		var leftHandOdd = {"0001101": 0, "0011001": 1, "0010011": 2, "0111101": 3, "0100011": 4,
 			"0110001": 5, "0101111": 6, "0111011": 7, "0110111": 8, "0001011": 9};
