@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">24</p>
+			font-size: 12px;">12</p>
 
 	</body>
 
@@ -158,8 +158,8 @@
 	}
 
 	function parseEAN_13(groups) {
-		if (groups.length < 31) return null;
-		groups = groups.slice(0, 31);
+		if (groups.length < 60) return null;
+		groups = groups.slice(0, 60);
 
 		for (var i = 0; i < 31; i++) {
 			if (i % 2 === 0) {
@@ -168,6 +168,36 @@
 				if (groups[i].direction !== 1) return null;
 			}
 		}
+
+		var leftGuard = groups.slice(0, 4);
+		var centerGuard = groups.slice(27, 33);
+		var rightGuard = groups.slice(56, 60);
+
+		var bitSize = 0;
+		bitSize += leftGuard[1].center - leftGuard[0].center;
+		bitSize += leftGuard[2].center - leftGuard[1].center;
+		bitSize += leftGuard[3].center - leftGuard[2].center;
+		bitSize += centerGuard[1].center - centerGuard[0].center;
+		bitSize += centerGuard[2].center - centerGuard[1].center;
+		bitSize += centerGuard[3].center - centerGuard[2].center;
+		bitSize += centerGuard[4].center - centerGuard[4].center;
+		bitSize += centerGuard[5].center - centerGuard[5].center;
+		bitSize += rightGuard[1].center - rightGuard[0].center;
+		bitSize += rightGuard[2].center - rightGuard[1].center;
+		bitSize += rightGuard[3].center - rightGuard[2].center;
+		bitSize /= 11;
+
+		var data = [];
+		for (var i = 0; i < 59; i++) {
+			var barSize = groups[i + 1] - groups[i].center;
+			var bits = Math.round(barSize / bitSize);
+			if (bits < 1) return null;
+			if (bits > 4) return null;
+			for (var j = 0; j < bits; j++) {
+				data.push((i % 2 === 0) ? 0 : 1);
+			}
+		}
+		if (data.length < 95) return null;
 
 		return true;
 	}
