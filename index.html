@@ -140,7 +140,7 @@
 		for (var i = 0; i < groups.length && result === null; i++) {
 			result = parseEAN_13(groups.slice(i));
 		}
-		if (result) alert("Something!");
+		if (result) alert(result.toString());
 
 		// Drawing for debugging
 		groups.forEach(function(group) {
@@ -173,8 +173,6 @@
 		var centerGuard = groups.slice(27, 33);
 		var rightGuard = groups.slice(56, 60);
 
-		console.log(leftGuard.length + ", " + centerGuard.length + ", " + rightGuard.length);
-
 		var bitSize = 0;
 		bitSize += leftGuard[1].center - leftGuard[0].center;
 		bitSize += leftGuard[2].center - leftGuard[1].center;
@@ -194,11 +192,11 @@
 			var barSize = groups[i + 1].center - groups[i].center;
 			var bits = Math.round(barSize / bitSize);
 			if (bits < 1) {
-				console.log("Bar too small: " + bits + " bits");
+				console.log("Bar too small: " + bits + " bits < 1 bits");
 				return null;
 			}
 			if (bits > 4) {
-				console.log("Bar too big: " + bits + " bits");
+				console.log("Bar too big: " + bits + " bits > 4 bits");
 				return null;
 			}
 			for (var j = 0; j < bits; j++) {
@@ -206,10 +204,48 @@
 			}
 		}
 		if (data.length < 95) {
-			console.log("Bit count not correct: " + data.length + " bits");
+			console.log("Bit count not correct: " + data.length + " bits != 95 bits");
 			return null;
 		}
 
-		return true;
+		var leftHandOdd = {"0001101": 0, "0011001": 1, "0010011": 2, "0111101": 3, "0100011": 4,
+			"0110001": 5, "0101111": 6, "0111011": 7, "0110111": 8, "0001011": 9};
+
+		var leftHandEven = {"0100111": 0, "0110011": 1, "0011011": 2, "0100001": 3, "0011101": 4,
+			"0111001": 5, "0000101": 6, "0010001": 7, "0001001": 8, "0010111": 9};
+
+		var rightHand = {"1110010": 0, "1100110": 1, "1101100": 2, "1000010": 3, "1011100": 4,
+			"1001110": 5, "1010000": 6, "1000100": 7, "1001000": 8, "1110100": 9};
+
+		var numbers = [];
+		data.splice(3);
+		for (var i = 0; i < 6; i++) {
+			var str = "";
+			for (var j = 0; j < 7; j++) str += data[i * 7 + j];
+			var number = (i % 2 === 0 ? leftHandOdd : leftHandEven)[str];
+
+			if (!number) {
+				console.log("Couldn't parse number: " + str);
+				return null;
+			} else {
+				numbers.push(number);
+			}
+		}
+		data.splice(5);
+		for (var i = 0; i < 6; i++) {
+			var str = "";
+			for (var j = 0; j < 7; j++) str += data[i * 7 + j];
+			var number = rightHand[str];
+
+			if (!number) {
+				console.log("Couldn't parse number: " + str);
+				return null;
+			} else {
+				numbers.push(number);
+			}
+		}
+		data.splice(3);
+
+		return numbers;
 	}
 </script>
