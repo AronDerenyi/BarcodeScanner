@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">24</p>
+			font-size: 12px;">12</p>
 
 	</body>
 
@@ -227,6 +227,7 @@
 
 			var possibilityCount = 1;
 			for (var i = 0; i < 12; i++) possibilityCount *= numberPossibilities[i].length;
+			if (possibilityCount === 0) continue;
 
 			console.log(possibilityCount);
 
@@ -340,7 +341,7 @@
 
 	function compare(str, matcher) {
 		var data = [];
-		for (var i = 0; i < str.length; i++) data[i] = [];
+		for (var i = 0; i < str.length + 1; i++) data[i] = [];
 		for (var i = 0; i < matcher.length; i++) {
 			var match = matcher[i];
 			var value = str.length;
