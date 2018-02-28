@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">12</p>
+			font-size: 12px;">24</p>
 
 	</body>
 
@@ -227,6 +227,8 @@
 
 			var possibilityCount = 1;
 			for (var i = 0; i < 12; i++) possibilityCount *= numberPossibilities[i].length;
+
+			console.log(possibilityCount);
 
 			var combination = [];
 			for (var i = 0; i < 12; i++) combination[i] = 0;
