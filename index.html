@@ -167,69 +167,8 @@
 			}
 		}
 
-//		context.fillStyle = "rgb(0, 0, 0)";
-//		context.fillRect(0, 0, canvas.width, 1);
-//
-//		for (var i = 3; i <= 27; i++) {
-//			var group = groups[i];
-//			var center = (group.center - start) / (end - start);
-//
-//			var r = group.direction * 255;
-//			var g = 0;
-//			var b = -group.direction * 255;
-//
-//			context.fillStyle = "rgb(" +
-//				Math.min(Math.max(Math.floor(r), 0), 255) + ", " +
-//				Math.min(Math.max(Math.floor(g), 0), 255) + ", " +
-//				Math.min(Math.max(Math.floor(b), 0), 255) + ")";
-//
-//			context.fillRect(center * canvas.width, 0, 1, 1);
-//		}
-//
-//		for (var i = 0; i < 43; i++) {
-//			context.fillStyle = "rgb(255, 255, 255)";
-//			context.fillRect(i * canvas.width / 42, 0, 1, 1);
-//		}
-
-		var quantizedGroups = quantize(contrasts.slice(3, 28), 42);
-		var str = "";
-		var bit;
-		for (var i = 0; i < 42; i++) {
-			if (quantizedGroups[i]) {
-				if (quantizedGroups[i].direction < 0) bit = 1;
-				if (quantizedGroups[i].direction > 0) bit = 0;
-				str += "|"
-			}
-			str += bit;
-		}
-//		console.log(str);
-//		console.log("|0|111|0|11|00|11|00|1|00|1|00|11|0|1111|0|1|0|1|000|11|0|11|000|1");
-		if (str === "|0|111|0|11|00|11|00|1|00|1|00|11|0|1111|0|1|0|1|000|11|0|11|000|1") console.log("CORRRRRRRRECCCCTTTT!");
-
-		return null;
-
-		var start = groups[0].center;
-		var end = groups[59].center;
-		var data = [];
-
-		var prevGroupIndex = 0;
-		var str = "";
-		for (var i = 0; i < 95; i++) {
-			while ((groups[prevGroupIndex + 1].center - start) / (end - start) * 95 < i + 0.5) {
-				prevGroupIndex++;
-				str += "|";
-			}
-			if (groups[prevGroupIndex].direction < 0) {
-				data[i] = 1;
-				str += "1";
-			}
-			if (groups[prevGroupIndex].direction > 0) {
-				data[i] = 0;
-				str += "0";
-			}
-		}
-
-		console.log(str);
+		var leftData = contrastsToBits(contrasts.slice(3, 28), 42);
+		var rightData = contrastsToBits(contrasts.slice(32, 57), 42);
 
 		var codes = {
 			L: ["0001101", "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011"],
@@ -241,27 +180,21 @@
 
 		var characters = [];
 		var types = [];
-		data.splice(0, 3);
+
 		for (var i = 0; i < 6; i++) {
-			var str = data.splice(0, 7).join("");
-			var confidence = 0;
+			var str = leftData.slice(i * 7, 7).join("");
 			var character = null;
 			var type;
 
-			for (var j = 0; j < 10 && confidence < 7; j++) {
-				var localConfidence = 0;
-				for (var k = 0; k < 7; k++) if (codes.L[j].charAt(k) === str.charAt(k)) localConfidence++;
-				if (localConfidence >= confidence) {
-					confidence = localConfidence;
+			for (var j = 0; j < 10 && !character; j++) {
+				if (codes.L[j] === str) {
 					character = j;
 					type = "L";
 				}
 			}
-			for (var j = 0; j < 10 && confidence < 7; j++) {
-				var localConfidence = 0;
-				for (var k = 0; k < 7; k++) if (codes.G[j].charAt(k) === str.charAt(k)) localConfidence++;
-				if (localConfidence >= confidence) {
-					confidence = localConfidence;
+
+			for (var j = 0; j < 10 && !character; j++) {
+				if (codes.G[j] === str) {
 					character = j;
 					type = "G";
 				}
@@ -270,34 +203,25 @@
 			characters.push(character);
 			types.push(type);
 		}
-		data.splice(0, 5);
+
 		for (var i = 0; i < 6; i++) {
-			var str = data.splice(0, 7).join("");
-			var confidence = 0;
+			var str = rightData.slice(i * 7, 7).join("");
 			var character = null;
 
-			for (var j = 0; j < 10 && confidence < 7; j++) {
-				var localConfidence = 0;
-				for (var k = 0; k < 7; k++) if (codes.R[j].charAt(k) === str.charAt(k)) localConfidence++;
-				if (localConfidence >= confidence) {
-					confidence = localConfidence;
+			for (var j = 0; j < 10 && !character; j++) {
+				if (codes.R[j] === str) {
 					character = j;
 				}
 			}
 
 			characters.push(character);
 		}
-		data.splice(0, 3);
 
 		var str = types.join("");
-		var confidence = 0;
 		var type = null;
 
-		for (var j = 0; j < 10 && confidence < 6; j++) {
-			var localConfidence = 0;
-			for (var k = 0; k < 6; k++) if (codeTypes[j].charAt(k) === str.charAt(k)) localConfidence++;
-			if (localConfidence >= confidence) {
-				confidence = localConfidence;
+		for (var j = 0; j < 10 && !type; j++) {
+			if (codeTypes[j] === str) {
 				type = j;
 			}
 		}
@@ -362,5 +286,20 @@
 		}
 
 		return quantizedContrasts;
+	}
+
+	function contrastsToBits(contrasts, bitCount) {
+		contrasts = quantize(contrasts, bitCount);
+		var data = [];
+
+		var bit;
+		for (var i = 0; i < 42; i++) {
+			if (contrasts[i]) {
+				if (contrasts[i].direction < 0) bit = 1;
+				if (contrasts[i].direction > 0) bit = 0;
+			}
+			data.push(bit);
+		}
+		return data;
 	}
 </script>
