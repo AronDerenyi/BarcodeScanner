@@ -337,7 +337,7 @@
 				closestContrasts[i].forEach(function(contrast) {
 					if (Math.abs(contrast.distance) < Math.abs(closest.distance)) closest = contrast;
 				});
-				closestContrasts[i].splice(quantizedContrasts[i].indexOf(closest), 1);
+				closestContrasts[i].splice(closestContrasts[i].indexOf(closest), 1);
 				quantizedContrasts[i] = closest.contrast;
 			}
 		}
