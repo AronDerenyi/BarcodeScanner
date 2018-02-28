@@ -332,18 +332,18 @@
 
 		var quantizedContrasts = [];
 		for (var i = 0; i <= gridSize; i++) {
-			if (quantizedContrasts[i].length > 0) {
-				var closest = quantizedContrasts[i][0];
-				quantizedContrasts[i].forEach(function(contrast) {
+			if (closestContrasts[i].length > 0) {
+				var closest = closestContrasts[i][0];
+				closestContrasts[i].forEach(function(contrast) {
 					if (Math.abs(contrast.distance) < Math.abs(closest.distance)) closest = contrast;
 				});
-				quantizedContrasts[i].splice(quantizedContrasts[i].indexOf(closest), 1);
+				closestContrasts[i].splice(quantizedContrasts[i].indexOf(closest), 1);
 				quantizedContrasts[i] = closest.contrast;
 			}
 		}
 		for (var i = 0; i <= gridSize; i++) {
-			if (quantizedContrasts[i].length > 0) {
-				quantizedContrasts[i].forEach(function(contrast) {
+			if (closestContrasts[i].length > 0) {
+				closestContrasts[i].forEach(function(contrast) {
 					if (contrast.distance < 0 && i > 0 && !quantizedContrasts[i - 1]) {
 						quantizedContrasts[i - 1] = contrast.contrast;
 					} else if (contrast.distance > 0 && i < 42 && !quantizedContrasts[i + 1]) {
