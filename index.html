@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">12</p>
+			font-size: 12px;">24</p>
 
 	</body>
 
@@ -229,30 +229,24 @@
 			for (var i = 0; i < 12; i++) possibilityCount *= numberPossibilities[i].length;
 			if (possibilityCount === 0) continue;
 
-			console.log(possibilityCount);
-
 			var combination = [];
 			for (var i = 0; i < 12; i++) combination[i] = 0;
 			for (var i = 0; i < possibilityCount; i++) {
 				var number = [type];
-				for (var i = 0; i < 12; i++) {
-					number.push(numberPossibilities[i][combination[i]]);
+				for (var j = 0; j < 12; j++) {
+					number.push(numberPossibilities[j][combination[j]]);
 				}
 				possibleNumbers.push(number);
 
 				combination[12 - 1]++;
-				for (var i = 12 - 1; i >= 0; i--) {
-					if (combination[i] === numberPossibilities[i].length) {
-						combination[i] = 0;
-						combination[i - 1]++;
+				for (var j = 12 - 1; j >= 0; j--) {
+					if (combination[j] === numberPossibilities[j].length) {
+						combination[j] = 0;
+						combination[j - 1]++;
 					}
 				}
 			}
-
-			console.log("end for");
 		}
-
-		console.log("-----");
 
 		var number = null;
 		possibleNumbers.forEach(function(possibleNumber) {
