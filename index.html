@@ -182,7 +182,7 @@
 		var types = [];
 
 		for (var i = 0; i < 6; i++) {
-			var str = leftData.slice(i * 7, 7).join("");
+			var str = leftData.splice(0, 7).join("");
 			var character = null;
 			var type;
 
@@ -213,7 +213,7 @@
 		return null;
 
 		for (var i = 0; i < 6; i++) {
-			var str = rightData.slice(i * 7, 7).join("");
+			var str = rightData.splice(0, 7).join("");
 			var character = null;
 
 			for (var j = 0; j < 10 && !character; j++) {
