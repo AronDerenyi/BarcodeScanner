@@ -224,6 +224,9 @@
 			var numberPossibilities = [];
 			for (var i = 0; i < 6; i++) numberPossibilities.push(rightNumberPossibilities[i][typeCode.substr(i, 1)]);
 			for (var i = 0; i < 6; i++) numberPossibilities.push(leftNumberPossibilities[i]);
+			console.log(rightNumberPossibilities);
+			console.log(leftNumberPossibilities);
+			console.log(numberPossibilities);
 
 			var possibilityCount = 1;
 			for (var i = 0; i < 12; i++) possibilityCount *= numberPossibilities[i].length;
