@@ -343,7 +343,7 @@
 					}
 				});
 				closestContrasts[i].splice(closest, 1);
-				quantizedContrasts[i] = closestContrasts[closest].contrast;
+				quantizedContrasts[i] = closestContrasts[i][closest].contrast;
 			}
 		}
 		for (var i = 0; i <= gridSize; i++) {
