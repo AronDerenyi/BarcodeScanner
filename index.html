@@ -200,9 +200,17 @@
 				}
 			}
 
+			if (!character) {
+				console.log("Character not parsed");
+				return null;
+			}
+
 			characters.push(character);
 			types.push(type);
 		}
+
+		console.log(characters.join(""));
+		return null;
 
 		for (var i = 0; i < 6; i++) {
 			var str = rightData.slice(i * 7, 7).join("");
