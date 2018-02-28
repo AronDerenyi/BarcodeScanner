@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">12</p>
+			font-size: 12px;">24</p>
 
 	</body>
 
@@ -333,17 +333,17 @@
 		var quantizedContrasts = [];
 		for (var i = 0; i <= gridSize; i++) {
 			if (closestContrasts[i].length > 0) {
-				var closest = -1;
+				var closest = null;
 				var closestDistance;
 				closestContrasts[i].forEach(function(contrast) {
 					var distance = Math.abs(contrast.distance);
-					if (distance < closestDistance || closest === -1) {
+					if (distance < closestDistance || !closest) {
 						closest = contrast;
 						closestDistance = distance;
 					}
 				});
-				closestContrasts[i].splice(closest, 1);
-				quantizedContrasts[i] = closestContrasts[i][closest].contrast;
+				closestContrasts[i].splice(closestContrasts[i].indexOf(closest), 1);
+				quantizedContrasts[i] = closest.contrast;
 			}
 		}
 		for (var i = 0; i <= gridSize; i++) {
