@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">12</p>
+			font-size: 12px;">24</p>
 
 	</body>
 
@@ -237,14 +237,50 @@
 			context.fillRect(i * canvas.width / 42, 0, 1, 1);
 		}
 
+		var closestGroups = [];
+		for (var i = 0; i <= 42; i++) closestGroups[i] = [];
+		for (var j = 3; j <= 27; j++) {
+			var group = groups[j];
+			var gridPosition = (group.center - start) / (end - start) * 42;
+			var quantizedPosition = Math.round(gridPosition);
+			closestGroups[quantizedPosition].push({
+				group: group,
+				distance: gridPosition - quantizedPosition
+			});
+		}
+
+		var quantizedGroups = [];
+		for (var i = 0; i <= 42; i++) {
+			if (closestGroups[i].length > 0) {
+				var closest = closestGroups[i][0];
+				closestGroups[i].forEach(function(group) {
+					if (Math.abs(group.distance) < Math.abs(closest.distance)) closest = group;
+				});
+				closestGroups[i].remove(closest);
+				quantizedGroups[i] = closest.group;
+			}
+		}
+		for (var i = 0; i <= 42; i++) {
+			if (closestGroups[i].length > 0) {
+				closestGroups[i].forEach(function(group) {
+					if (group.distance < 0 && i > 0 && !quantizedGroups[i - 1]) {
+						quantizedGroups[i - 1] = group.group;
+					} else if (group.distance > 0 && i < 42 && !quantizedGroups[i + 1]) {
+						quantizedGroups[i + 1] = group.group;
+					} else {
+						console.log("Bars too close!");
+						return null;
+					}
+				});
+			}
+		}
+
 		var str = "";
+		var bit;
 		for (var i = 0; i < 42; i++) {
-			var bit;
-			for (var j = 3; j < 27; j++) {
-				if (((groups[j].center - start) / (end - start) * 42) < i + 0.5 && ((groups[j + 1].center - start) / (end - start) * 42) > i + 0.5) {
-					bit = groups[j].direction < 0 ? 1 : 0;
-					break;
-				}
+			if (quantizedGroups[i]) {
+				if (quantizedGroups[i].direction < 0) bit = 1;
+				if (quantizedGroups[i].direction > 0) bit = 0;
 			}
 			str += bit;
 		}
