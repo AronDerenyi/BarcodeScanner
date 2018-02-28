@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">24</p>
+			font-size: 12px;">12</p>
 
 	</body>
 
@@ -86,7 +86,7 @@
 		var imageData = context.getImageData(0, 0, width, 1).data;
 		var luminance = [];
 		var difference = [];
-		var groups = [];
+		var contrasts = [];
 
 		// Creating luminance
 		for (var i = 0; i < width; i++) {
@@ -105,8 +105,8 @@
 
 		// Grouping luminance difference
 		var threshold = 0.2;
-		var groupStart = -1;
-		var groupDirection = 0;
+		var contrastStart = -1;
+		var contrastDirection = 0;
 		for (var i = 0; i < width; i++) {
 			var direction = difference[i];
 
@@ -118,163 +118,80 @@
 				direction = 0;
 			}
 
-			if (groupStart === -1 || direction !== groupDirection) {
-				if (groupStart >= 0 && groupDirection !== 0) {
-					var groupLength = i - groupStart;
-					var centerOffset = groupLength / 8;
-					var groupCenter = groupStart + groupLength / 2 + centerOffset * groupDirection;
-					groups.push({
-						start: groupStart,
-						length: groupLength,
-						center: groupCenter,
-						direction: groupDirection
+			if (contrastStart === -1 || direction !== contrastDirection) {
+				if (contrastStart >= 0 && contrastDirection !== 0) {
+					var contrastLength = i - contrastStart;
+					var centerOffset = contrastLength / 8;
+					contrasts.push({
+						position: contrastStart + contrastLength / 2 + centerOffset * contrastDirection,
+						direction: contrastDirection
 					});
 				}
 
-				groupStart = i;
-				groupDirection = direction;
+				contrastStart = i;
+				contrastDirection = direction;
 			}
 		}
-
-		// Drawing for debugging
-		groups.forEach(function(group) {
-			var r = group.direction * 255;
-			var g = 0;
-			var b = -group.direction * 255;
-
-			context.fillStyle = "rgb(" +
-				Math.min(Math.max(Math.floor(r), 0), 255) + ", " +
-				Math.min(Math.max(Math.floor(g), 0), 255) + ", " +
-				Math.min(Math.max(Math.floor(b), 0), 255) + ")";
-
-			context.fillRect(group.center, 0, 1, 1);
-		});
 
 		// Try to interpret
 		var result = null;
-		for (var i = 0; i < groups.length && result === null; i++) {
-			result = parseEAN_13(groups.slice(i));
+		for (var i = 0; i < contrasts.length && result === null; i++) {
+			result = parseEAN_13(contrasts.slice(i));
 		}
 		if (result) alert(result.join(""));
+
+		// Drawing for debugging
+//		contrasts.forEach(function(contrast) {
+//			var r = contrast.direction * 255;
+//			var g = 0;
+//			var b = -contrast.direction * 255;
+//
+//			context.fillStyle = "rgb(" +
+//				Math.min(Math.max(Math.floor(r), 0), 255) + ", " +
+//				Math.min(Math.max(Math.floor(g), 0), 255) + ", " +
+//				Math.min(Math.max(Math.floor(b), 0), 255) + ")";
+//
+//			context.fillRect(contrast.center, 0, 1, 1);
+//		});
 	}
 
-	function parseEAN_13(groups) {
-		if (groups.length < 60) return null;
-		groups = groups.slice(0, 60);
+	function parseEAN_13(contrasts) {
+		if (contrasts.length < 60) return null;
+		contrasts = contrasts.slice(0, 60);
 
 		for (var i = 0; i < 60; i++) {
 			if (i % 2 === 0) {
-				if (groups[i].direction !== -1) return null;
+				if (contrasts[i].direction !== -1) return null;
 			} else {
-				if (groups[i].direction !== 1) return null;
+				if (contrasts[i].direction !== 1) return null;
 			}
 		}
 
-//		var leftGuard = groups.slice(0, 4);
-//		var centerGuard = groups.slice(27, 33);
-//		var rightGuard = groups.slice(56, 60);
+//		context.fillStyle = "rgb(0, 0, 0)";
+//		context.fillRect(0, 0, canvas.width, 1);
 //
-//		var bitSize = 0;
-//		bitSize += leftGuard[1].center - leftGuard[0].center;
-//		bitSize += leftGuard[2].center - leftGuard[1].center;
-//		bitSize += leftGuard[3].center - leftGuard[2].center;
-//		bitSize += centerGuard[1].center - centerGuard[0].center;
-//		bitSize += centerGuard[2].center - centerGuard[1].center;
-//		bitSize += centerGuard[3].center - centerGuard[2].center;
-//		bitSize += centerGuard[4].center - centerGuard[3].center;
-//		bitSize += centerGuard[5].center - centerGuard[4].center;
-//		bitSize += rightGuard[1].center - rightGuard[0].center;
-//		bitSize += rightGuard[2].center - rightGuard[1].center;
-//		bitSize += rightGuard[3].center - rightGuard[2].center;
-//		bitSize /= 11;
+//		for (var i = 3; i <= 27; i++) {
+//			var group = groups[i];
+//			var center = (group.center - start) / (end - start);
 //
-//		var data = [];
-//		for (var i = 0; i < 59; i++) {
-//			var barSize = groups[i + 1].center - groups[i].center;
-//			var bits = Math.round(barSize / bitSize);
-//			if (bits < 1) {
-//				console.log("Bar too small: " + bits + " bits < 1 bits");
-//				return null;
-//			}
-//			if (bits > 4) {
-//				console.log("Bar too big: " + bits + " bits > 4 bits");
-//				return null;
-//			}
-//			for (var j = 0; j < bits; j++) {
-//				data.push(((i % 2 === 0) ? 0 : 1));
-//			}
+//			var r = group.direction * 255;
+//			var g = 0;
+//			var b = -group.direction * 255;
+//
+//			context.fillStyle = "rgb(" +
+//				Math.min(Math.max(Math.floor(r), 0), 255) + ", " +
+//				Math.min(Math.max(Math.floor(g), 0), 255) + ", " +
+//				Math.min(Math.max(Math.floor(b), 0), 255) + ")";
+//
+//			context.fillRect(center * canvas.width, 0, 1, 1);
 //		}
-//		if (data.length < 95) {
-//			console.log("Bit count not correct: " + data.length + " bits != 95 bits");
-//			return null;
+//
+//		for (var i = 0; i < 43; i++) {
+//			context.fillStyle = "rgb(255, 255, 255)";
+//			context.fillRect(i * canvas.width / 42, 0, 1, 1);
 //		}
 
-		var start = groups[3].center;
-		var end = groups[27].center;
-		var co = "|0|111|0|11|00|11|00|1|00|1|00|11|0|1111|0|1|0|1|000|11|0|11|000|1|";
-
-		context.fillStyle = "rgb(0, 0, 0)";
-		context.fillRect(0, 0, canvas.width, 1);
-
-		for (var i = 3; i <= 27; i++) {
-			var group = groups[i];
-			var center = (group.center - start) / (end - start);
-
-			var r = group.direction * 255;
-			var g = 0;
-			var b = -group.direction * 255;
-
-			context.fillStyle = "rgb(" +
-				Math.min(Math.max(Math.floor(r), 0), 255) + ", " +
-				Math.min(Math.max(Math.floor(g), 0), 255) + ", " +
-				Math.min(Math.max(Math.floor(b), 0), 255) + ")";
-
-			context.fillRect(center * canvas.width, 0, 1, 1);
-		}
-
-		for (var i = 0; i < 43; i++) {
-			context.fillStyle = "rgb(255, 255, 255)";
-			context.fillRect(i * canvas.width / 42, 0, 1, 1);
-		}
-
-		var closestGroups = [];
-		for (var i = 0; i <= 42; i++) closestGroups[i] = [];
-		for (var j = 3; j <= 27; j++) {
-			var group = groups[j];
-			var gridPosition = (group.center - start) / (end - start) * 42;
-			var quantizedPosition = Math.round(gridPosition);
-			closestGroups[quantizedPosition].push({
-				group: group,
-				distance: gridPosition - quantizedPosition
-			});
-		}
-
-		var quantizedGroups = [];
-		for (var i = 0; i <= 42; i++) {
-			if (closestGroups[i].length > 0) {
-				var closest = closestGroups[i][0];
-				closestGroups[i].forEach(function(group) {
-					if (Math.abs(group.distance) < Math.abs(closest.distance)) closest = group;
-				});
-				closestGroups[i].splice(closestGroups[i].indexOf(closest), 1);
-				quantizedGroups[i] = closest.group;
-			}
-		}
-		for (var i = 0; i <= 42; i++) {
-			if (closestGroups[i].length > 0) {
-				closestGroups[i].forEach(function(group) {
-					if (group.distance < 0 && i > 0 && !quantizedGroups[i - 1]) {
-						quantizedGroups[i - 1] = group.group;
-					} else if (group.distance > 0 && i < 42 && !quantizedGroups[i + 1]) {
-						quantizedGroups[i + 1] = group.group;
-					} else {
-						console.log("Bars too close!");
-						return null;
-					}
-				});
-			}
-		}
-
+		var quantizedGroups = quantize(contrasts.slice(3, 28), 42);
 		var str = "";
 		var bit;
 		for (var i = 0; i < 42; i++) {
@@ -286,7 +203,7 @@
 			str += bit;
 		}
 		console.log(str);
-		console.log(co);
+		console.log("|0|111|0|11|00|11|00|1|00|1|00|11|0|1111|0|1|0|1|000|11|0|11|000|1|");
 
 		return null;
 
@@ -395,5 +312,49 @@
 		}
 
 		return numbers;
+	}
+
+	function quantize(contrasts, gridSize) {
+		var start = contrasts[0].position;
+		var end = contrasts[contrasts.length - 1].position;
+
+		var closestContrasts = [];
+		for (var i = 0; i <= gridSize; i++) closestContrasts[i] = [];
+		contrasts.forEach(function(contrast) {
+			var gridPosition = (contrast.position - start) / (end - start) * gridSize;
+			var quantizedPosition = Math.round(gridPosition);
+			closestContrasts[quantizedPosition].push({
+				contrast: contrast,
+				distance: gridPosition - quantizedPosition
+			});
+		});
+
+		var quantizedContrasts = [];
+		for (var i = 0; i <= gridSize; i++) {
+			if (quantizedContrasts[i].length > 0) {
+				var closest = quantizedContrasts[i][0];
+				quantizedContrasts[i].forEach(function(contrast) {
+					if (Math.abs(contrast.distance) < Math.abs(closest.distance)) closest = contrast;
+				});
+				quantizedContrasts[i].splice(quantizedContrasts[i].indexOf(closest), 1);
+				quantizedContrasts[i] = closest.contrast;
+			}
+		}
+		for (var i = 0; i <= gridSize; i++) {
+			if (quantizedContrasts[i].length > 0) {
+				quantizedContrasts[i].forEach(function(contrast) {
+					if (contrast.distance < 0 && i > 0 && !quantizedContrasts[i - 1]) {
+						quantizedContrasts[i - 1] = contrast.contrast;
+					} else if (contrast.distance > 0 && i < 42 && !quantizedContrasts[i + 1]) {
+						quantizedContrasts[i + 1] = contrast.contrast;
+					} else {
+						console.log("Contrasts too close!");
+						return null;
+					}
+				});
+			}
+		}
+
+		return quantizedContrasts;
 	}
 </script>
