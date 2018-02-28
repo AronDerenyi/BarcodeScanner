@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">24</p>
+			font-size: 12px;">12</p>
 
 	</body>
 
@@ -253,7 +253,7 @@
 			var checksum = 0;
 			for (var i = 0; i < 12; i++) {
 				var weight = i % 2 === 0 ? 1 : 3;
-				checksum += checksum + possibleNumber[i] * weight;
+				checksum += possibleNumber[i] * weight;
 			}
 
 			checksum = checksum % 10;
