@@ -175,83 +175,101 @@
 			G: ["0100111", "0110011", "0011011", "0100001", "0011101", "0111001", "0000101", "0010001", "0001001", "0010111"],
 			R: ["1110010", "1100110", "1101100", "1000010", "1011100", "1001110", "1010000", "1000100", "1001000", "1110100"]
 		};
-
 		var codeTypes = ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
 
-		var characters = [];
-		var types = [];
+		var leftNumberPossibilities = [];
+		var rightNumberPossibilities = [];
 
 		for (var i = 0; i < 6; i++) {
 			var str = leftData.splice(0, 7).join("");
-			var character = null;
-			var type;
+			var compareDataL = compare(str, codes.L);
+			var compareDataG = compare(str, codes.G);
 
-			for (var j = 0; j < 10 && !character; j++) {
-				if (codes.L[j] === str) {
-					character = j;
-					type = "L";
-				}
-			}
+			leftNumberPossibilities[i] = {
+				L: [],
+				G: []
+			};
 
-			for (var j = 0; j < 10 && !character; j++) {
-				if (codes.G[j] === str) {
-					character = j;
-					type = "G";
-				}
-			}
-
-			if (!character) {
-				console.log("Character not parsed");
+			if (compareDataL[0].length > 0) {
+				leftNumberPossibilities[i].L = compareDataL[0];
+			} else if (compareDataG[0].length > 0) {
+				leftNumberPossibilities[i].G = compareDataG[0];
+			} else if (compareDataL[1].length > 0 || compareDataG[1].length > 0) {
+				leftNumberPossibilities[i].L = compareDataL[1];
+				leftNumberPossibilities[i].G = compareDataG[1];
+			} else {
+				console.log("Can't parse number on left");
 				return null;
 			}
-
-			characters.push(character);
-			types.push(type);
 		}
 
 		for (var i = 0; i < 6; i++) {
 			var str = rightData.splice(0, 7).join("");
-			var character = null;
+			var compareData = compare(str, codes.R);
 
-			for (var j = 0; j < 10 && !character; j++) {
-				if (codes.R[j] === str) {
-					character = j;
-				}
-			}
-
-			if (!character) {
-				console.log("Character not parsed");
+			if (compareData[0].length > 0) {
+				rightNumberPossibilities[i] = compareData[0];
+			} else if (compareData[1].length > 0) {
+				rightNumberPossibilities[i] = compareData[1];
+			} else {
+				console.log("Can't parse number on right");
 				return null;
 			}
-
-			characters.push(character);
 		}
 
-		var str = types.join("");
-		var type = null;
+		var possibleNumbers = [];
+		for (var type = 0; type < codeTypes.length; type++) {
+			var typeCode = codeTypes[i];
 
-		for (var j = 0; j < 10 && !type; j++) {
-			if (codeTypes[j] === str) {
-				type = j;
+			var numberPossibilities = [];
+			for (var i = 0; i < 6; i++) numberPossibilities.push(rightNumberPossibilities[i][typeCode.substr(i, 1)]);
+			for (var i = 0; i < 6; i++) numberPossibilities.push(leftNumberPossibilities[i]);
+
+			var possibilityCount = 1;
+			for (var i = 0; i < 12; i++) possibilityCount *= numberPossibilities[i].length;
+
+			var combination = [];
+			for (var i = 0; i < 12; i++) combination[i] = 0;
+			for (var i = 0; i < possibilityCount; i++) {
+				var number = [type];
+				for (var i = 0; i < 12; i++) {
+					number.push(numberPossibilities[i][combination[i]]);
+				}
+				possibleNumbers.push(number);
+
+				combination[12 - 1]++;
+				for (var i = 12 - 1; i >= 0; i--) {
+					if (combination[i] === numberPossibilities[i].length) {
+						combination[i] = 0;
+						combination[i - 1]++;
+					}
+				}
 			}
 		}
 
-		if (!character) {
-			console.log("Type not parsed");
-			return null;
-		}
+		var number = null;
+		possibleNumbers.forEach(function(possibleNumber) {
+			var checksum = 0;
+			for (var i = 0; i < 12; i++) {
+				var weight = i % 2 === 0 ? 1 : 3;
+				checksum += checksum + possibleNumber[i] * weight;
+			}
 
-		var numbers = [type].concat(characters);
-		var checksum = 0;
-		for (var i = 0; i < 12; i++) checksum += numbers[i] * (i % 2 === 0 ? 1 : 3);
-		checksum = 10 - (checksum % 10);
-		checksum %= 10;
-		if (checksum !== numbers[12]) {
-			console.log("Checksum mismatch: " + numbers.join(""));
-			return null;
-		}
+			checksum = checksum % 10;
+			checksum = 10 - checksum;
+			checksum = checksum % 10;
 
-		return numbers;
+			if (checksum === possibleNumber[12]) {
+				if (!number) {
+					number = possibleNumber;
+				} else {
+					console.log("Multiple possibilities");
+					return null;
+				}
+			}
+		});
+
+		return number;
 	}
 
 	function quantize(contrasts, gridSize) {
@@ -314,6 +332,20 @@
 				if (contrasts[i].direction > 0) bit = 0;
 			}
 			data.push(bit);
+		}
+		return data;
+	}
+
+	function compare(str, matcher) {
+		var data = [];
+		for (var i = 0; i < str.length; i++) data[i] = [];
+		for (var i = 0; i < matcher.length; i++) {
+			var match = matcher[i];
+			var value = str.length;
+			for (var j = 0; j < str.length && j < match.length; j++) {
+				if (str.charAt(j) === match.charAt(j)) value--;
+			}
+			data[value].push(i);
 		}
 		return data;
 	}
