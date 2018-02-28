@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">24</p>
+			font-size: 12px;">12</p>
 
 	</body>
 
@@ -256,7 +256,7 @@
 				closestGroups[i].forEach(function(group) {
 					if (Math.abs(group.distance) < Math.abs(closest.distance)) closest = group;
 				});
-				closestGroups[i].remove(closest);
+				closestGroups[i].splice(closestGroups[i].indexOf(closest), 1);
 				quantizedGroups[i] = closest.group;
 			}
 		}
