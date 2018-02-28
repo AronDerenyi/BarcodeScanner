@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">12</p>
+			font-size: 12px;">24</p>
 
 	</body>
 
@@ -211,7 +211,7 @@
 
 		var start = groups[3].center;
 		var end = groups[27].center;
-		var co = "011101100110010010011011110101000110110001";
+		var co = "|0|111|0|11|00|11|00|1|00|1|00|11|0|1111|0|1|0|1|000|11|0|11|000|1|";
 
 		context.fillStyle = "rgb(0, 0, 0)";
 		context.fillRect(0, 0, canvas.width, 1);
@@ -281,6 +281,7 @@
 			if (quantizedGroups[i]) {
 				if (quantizedGroups[i].direction < 0) bit = 1;
 				if (quantizedGroups[i].direction > 0) bit = 0;
+				str += "|"
 			}
 			str += bit;
 		}
