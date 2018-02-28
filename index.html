@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">24</p>
+			font-size: 12px;">12</p>
 
 	</body>
 
@@ -210,13 +210,13 @@
 //		}
 
 		var start = groups[3].center;
-		var end = groups[27].center;
+		var end = groups[28].center;
 		var co = "010111101000110001101011000100100110010011";
 
 		context.fillStyle = "rgb(0, 0, 0)";
 		context.fillRect(0, 0, canvas.width, 1);
 
-		for (var i = 3; i < 28; i++) {
+		for (var i = 3; i <= 28; i++) {
 			var group = groups[i];
 			var center = (group.center - start) / (end - start);
 
@@ -240,7 +240,7 @@
 		var str = "";
 		for (var i = 0; i < 42; i++) {
 			var bit;
-			for (var j = 3; j < 27; j++) {
+			for (var j = 3; j < 28; j++) {
 				if (((groups[j].center - start) / (end - start) * 42) < i + 0.5 && ((groups[j + 1].center - start) / (end - start) * 42) > i + 0.5) {
 					bit = groups[j].direction < 0 ? 1 : 0;
 					break;
