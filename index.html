@@ -40,7 +40,7 @@
 			top: 0;
 			left: 0;
 			color: white;
-			font-size: 12px;">24</p>
+			font-size: 12px;">12</p>
 
 	</body>
 
@@ -209,9 +209,6 @@
 			types.push(type);
 		}
 
-		console.log(characters.join(""));
-		return null;
-
 		for (var i = 0; i < 6; i++) {
 			var str = rightData.splice(0, 7).join("");
 			var character = null;
@@ -220,6 +217,11 @@
 				if (codes.R[j] === str) {
 					character = j;
 				}
+			}
+
+			if (!character) {
+				console.log("Character not parsed");
+				return null;
 			}
 
 			characters.push(character);
@@ -232,6 +234,11 @@
 			if (codeTypes[j] === str) {
 				type = j;
 			}
+		}
+
+		if (!character) {
+			console.log("Type not parsed");
+			return null;
 		}
 
 		var numbers = [type].concat(characters);
