@@ -141,18 +141,18 @@
 		if (result) alert(result.join(""));
 
 		// Drawing for debugging
-//		contrasts.forEach(function(contrast) {
-//			var r = contrast.direction * 255;
-//			var g = 0;
-//			var b = -contrast.direction * 255;
-//
-//			context.fillStyle = "rgb(" +
-//				Math.min(Math.max(Math.floor(r), 0), 255) + ", " +
-//				Math.min(Math.max(Math.floor(g), 0), 255) + ", " +
-//				Math.min(Math.max(Math.floor(b), 0), 255) + ")";
-//
-//			context.fillRect(contrast.center, 0, 1, 1);
-//		});
+		contrasts.forEach(function(contrast) {
+			var r = contrast.direction * 255;
+			var g = 0;
+			var b = -contrast.direction * 255;
+
+			context.fillStyle = "rgb(" +
+				Math.min(Math.max(Math.floor(r), 0), 255) + ", " +
+				Math.min(Math.max(Math.floor(g), 0), 255) + ", " +
+				Math.min(Math.max(Math.floor(b), 0), 255) + ")";
+
+			context.fillRect(contrast.center, 0, 1, 1);
+		});
 	}
 
 	function parseEAN_13(contrasts) {
@@ -167,9 +167,6 @@
 			}
 		}
 
-		var leftData = contrastsToBits(contrasts.slice(3, 28), 42);
-		var rightData = contrastsToBits(contrasts.slice(32, 57), 42);
-
 		var codes = {
 			L: ["0001101", "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011"],
 			G: ["0100111", "0110011", "0011011", "0100001", "0011101", "0111001", "0000101", "0010001", "0001001", "0010111"],
@@ -181,7 +178,7 @@
 		var rightNumberPossibilities = [];
 
 		for (var i = 0; i < 6; i++) {
-			var str = leftData.splice(0, 7).join("");
+			var str = contrastsToBits(contrasts.slice(3 + i * 4, 3 + (i + 1) * 4 + 1), 7).join("");
 			var compareDataL = compare(str, codes.L);
 			var compareDataG = compare(str, codes.G);
 
@@ -204,7 +201,7 @@
 		}
 
 		for (var i = 0; i < 6; i++) {
-			var str = rightData.splice(0, 7).join("");
+			var str = contrastsToBits(contrasts.slice(32 + i * 4, 32 + (i + 1) * 4 + 1), 42).join("");
 			var compareData = compare(str, codes.R);
 
 			if (compareData[0].length > 0) {
@@ -227,7 +224,7 @@
 
 			var possibilityCount = 1;
 			for (var i = 0; i < 12; i++) possibilityCount *= numberPossibilities[i].length;
-			if (possibilityCount === 0) continue;
+			if (possibilityCount === 0 || possibilityCount > 6) continue;
 
 			var combination = [];
 			for (var i = 0; i < 12; i++) combination[i] = 0;
